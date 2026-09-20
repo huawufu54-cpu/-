@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFD23F">
+<title>¡Feliz Día de la Flor Amarilla! 🌼</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='%23FFB703'%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12'/%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12' transform='rotate(60 32 32)'/%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12' transform='rotate(120 32 32)'/%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12' transform='rotate(180 32 32)'/%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12' transform='rotate(240 32 32)'/%3E%3Cellipse cx='32' cy='15' rx='8.5' ry='12' transform='rotate(300 32 32)'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='10.5' fill='%23FFF3C4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;600;700&display=swap">
+<style>
+/* ===== 基础 ===== */
+:root{
+  --cream:#FFF8E7;
+  --sun:#FFC93C;
+  --amber:#FFB703;
+  --gold:#F59E0B;
+  --peach:#FFE3B3;
+  --ink:#4A2C0E;
+  --ink-soft:#7A5424;
+  --paper:#FFFDF4;
+  --shadow:rgba(146,94,16,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Quicksand','Avenir','Century Gothic','PingFang SC','Microsoft YaHei',sans-serif;
+  color:var(--ink);
+  background:linear-gradient(160deg,#FFFDF3 0%,#FFEFC2 45%,#FFDF9E 100%);
+  min-height:100dvh;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+:focus-visible{outline:3px solid rgba(255,183,3,.65);outline-offset:3px;border-radius:8px}
+
+/* ===== 背景柔光 + 纸张颗粒 ===== */
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.55;pointer-events:none;z-index:0}
+.b1{width:44vmax;height:44vmax;left:-12vmax;top:-14vmax;background:radial-gradient(circle,#FFE9A8,transparent 70%)}
+.b2{width:38vmax;height:38vmax;right:-10vmax;bottom:-12vmax;background:radial-gradient(circle,#FFD9A0,transparent 70%)}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay}
+
+/* ===== 场景 ===== */
+.scene{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px;padding:16px;width:100%}
+.hint{
+  font-family:'Caveat','Segoe Script','Bradley Hand','Comic Sans MS',cursive;
+  font-size:clamp(20px,4.6vw,26px);
+  color:var(--ink-soft);
+  transition:opacity .5s;
+  text-align:center;
+}
+body.opened .hint{opacity:0}
+
+/* ===== 信封 ===== */
+.envelope{
+  position:relative;
+  width:min(88vw,460px);
+  aspect-ratio:3/2;
+  cursor:pointer;
+  perspective:1100px;
+  animation:floaty 3.6s ease-in-out infinite;
+  transition:opacity .5s, transform .5s;
+  -webkit-tap-highlight-color:transparent;
+}
+.envelope:hover{transform:scale(1.03)}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+.letter{
+  position:absolute;inset:7% 6% 8% 6%;
+  background:var(--paper);
+  border-radius:16px;
+  box-shadow:0 10px 26px rgba(146,94,16,.18);
+  z-index:2;
+  overflow:hidden;
+  transition:transform .65s cubic-bezier(0.22,1,0.36,1) .12s;
+}
+.envelope.open .letter{z-index:4;transform:translateY(-58%)}
+
+.pocket{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#FFD66B,#FFB84D);
+  border-radius:14px 14px 18px 18px;
+  clip-path:polygon(0 0,50% 42%,100% 0,100% 100%,0 100%);
+  box-shadow:0 26px 55px var(--shadow);
+  z-index:3;
+  transition:opacity .45s;
+  display:grid;
+  place-items:end center;
+  padding-bottom:5%;
+}
+.pocket .para{
+  font-family:'Caveat','Segoe Script','Bradley Hand','Comic Sans MS',cursive;
+  font-size:clamp(18px,4vw,24px);
+  color:#7A4E0D;
+  opacity:.85;
+}
+.flap{
+  position:absolute;top:0;left:0;right:0;height:53%;
+  background:linear-gradient(180deg,#FFC75F,#FFAE3A);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top center;
+  z-index:4;
+  transition:transform .6s cubic-bezier(0.22,1,0.36,1), opacity .45s;
+}
+.envelope.open .flap{transform:rotateX(180deg);z-index:1;opacity:.9}
+
+.seal{
+  position:absolute;left:50%;top:50%;
+  width:clamp(62px,16vw,76px);aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,#FFF6DA,#FFD23F 72%);
+  box-shadow:0 6px 16px rgba(146,94,16,.35), inset 0 -3px 6px rgba(190,120,10,.35);
+  z-index:5;
+  display:grid;place-items:center;
+  transition:transform .35s cubic-bezier(0.22,1,0.36,1), opacity .35s;
+  animation:beat 1.8s ease-in-out infinite;
+}
+.envelope.open .seal{transform:translate(-50%,-50%) scale(0);opacity:0}
+@keyframes beat{0%,100%{transform:translate(-50%,-50%) scale(1)}12%{transform:translate(-50%,-50%) scale(1.09)}24%{transform:translate(-50%,-50%) scale(1)}36%{transform:translate(-50%,-50%) scale(1.05)}48%{transform:translate(-50%,-50%) scale(1)}}
+
+.envelope-shadow{
+  position:absolute;left:12%;right:12%;bottom:-26px;height:26px;
+  background:radial-gradient(ellipse at center,rgba(146,94,16,.3),transparent 70%);
+  z-index:0;
+}
+
+/* ===== 信封展开后的信纸卡片 ===== */
+.letter.expanded{
+  position:fixed;
+  top:50%;left:50%;
+  right:auto;bottom:auto;
+  width:min(92vw,560px);
+  height:auto;
+  max-height:92dvh;
+  overflow-y:auto;
+  transform:translate(-50%,-50%);
+  z-index:60;
+  border-radius:22px;
+  box-shadow:0 34px 80px rgba(146,94,16,.32);
+  transition:transform .7s cubic-bezier(0.22,1,0.36,1);
+}
+.letter-pad{padding:clamp(22px,5.5vw,40px);display:flex;flex-direction:column;gap:14px}
+.letter h1{
+  font-size:clamp(21px,5vw,29px);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.25;
+}
+.letter .greet{
+  font-size:clamp(15px,4vw,17px);
+  font-weight:600;
+  color:var(--ink);
+}
+.letter p{
+  font-size:clamp(13.5px,3.8vw,16px);
+  line-height:1.72;
+  color:var(--ink-soft);
+}
+.letter .sign{
+  font-family:'Caveat','Segoe Script','Bradley Hand','Comic Sans MS',cursive;
+  font-size:clamp(22px,5.5vw,28px);
+  color:var(--ink);
+  line-height:1.35;
+  margin-top:4px;
+}
+.letter .sign b{color:var(--gold)}
+
+/* ===== 按钮 ===== */
+.btn{
+  align-self:center;
+  margin-top:8px;
+  border:none;cursor:pointer;
+  font-family:inherit;
+  font-size:clamp(15px,4vw,17px);
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(180deg,#FFC93C,#FFB703);
+  padding:13px 34px;
+  border-radius:999px;
+  box-shadow:0 10px 22px rgba(245,158,11,.4), inset 0 2px 0 rgba(255,255,255,.35);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(245,158,11,.5), inset 0 2px 0 rgba(255,255,255,.35)}
+.btn:active{transform:scale(.96)}
+
+.closing{
+  text-align:center;
+  font-family:'Caveat','Segoe Script','Bradley Hand','Comic Sans MS',cursive;
+  font-size:clamp(19px,4.6vw,24px);
+  color:var(--gold);
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+.closing.show{opacity:1;transform:none}
+
+/* ===== 大花弹出 ===== */
+#bigFlower{
+  position:fixed;left:50%;top:20%;
+  transform:translate(-50%,-50%) scale(0) rotate(-30deg);
+  z-index:66;pointer-events:none;
+  opacity:0;
+  transition:opacity .6s;
+}
+#bigFlower.show{opacity:1;animation:pop .7s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes pop{
+  0%{transform:translate(-50%,-50%) scale(0) rotate(-30deg)}
+  55%{transform:translate(-50%,-50%) scale(1.18) rotate(10deg)}
+  100%{transform:translate(-50%,-50%) scale(1) rotate(0)}
+}
+
+/* ===== 满屏黄花雨 ===== */
+#rain{position:fixed;inset:0;pointer-events:none;z-index:65;overflow:hidden}
+#rain span{position:absolute;top:-90px;left:0;animation:fall var(--dur) linear var(--delay) forwards}
+#rain i{display:block;animation:sway var(--dur) ease-in-out var(--delay) infinite}
+@keyframes fall{to{transform:translateY(calc(100dvh + 130px))}}
+@keyframes sway{
+  0%,100%{transform:translateX(0) rotate(0deg)}
+  25%{transform:translateX(calc(var(--sway) * -0.45)) rotate(45deg)}
+  50%{transform:translateX(calc(var(--sway) * 0.45)) rotate(-35deg)}
+  75%{transform:translateX(calc(var(--sway) * -0.35)) rotate(20deg)}
+}
+
+/* ===== 开信时的小花瓣迸溅 ===== */
+.burst-petal{
+  position:fixed;z-index:55;pointer-events:none;
+  border-radius:50%;
+  transition:transform .75s cubic-bezier(0.22,1,0.36,1), opacity .75s ease;
+}
+
+/* ===== 无障碍：减少动效 ===== */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+  .envelope:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<div class="blob b1" aria-hidden="true"></div>
+<div class="blob b2" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main class="scene">
+  <p class="hint">Toca el sobre para abrir 🌼</p>
+
+  <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir el sobre">
+    <div class="envelope-shadow" aria-hidden="true"></div>
+    <div class="letter" id="letter">
+      <div class="letter-pad">
+        <h1>¡Feliz Día de la Flor Amarilla!</h1>
+        <p class="greet">Mi LESSS,</p>
+        <p>Espero que hoy recibas flores hermosas. Y si no llegan, no te preocupes: te regalo una pequeña flor amarilla electrónica jajaja 🤲🌼</p>
+        <p>Espero que tengas un día hermoso y lleno de luz.</p>
+        <p class="sign">Con cariño,<br>tu amigo, <b>fanfan</b> 💛</p>
+        <button class="btn" id="btnRecibido" type="button">Recibido ✓</button>
+        <p class="closing" id="closing">¡Gracias por abrir mi regalo! Que tengas un día lleno de flores amarillas 💛</p>
+      </div>
+    </div>
+    <div class="pocket"><span class="para">Para ti 💛</span></div>
+    <div class="flap"></div>
+    <div class="seal" aria-hidden="true"></div>
+  </div>
+</main>
+
+<div id="bigFlower" aria-hidden="true"></div>
+<div id="rain" aria-hidden="true"></div>
+
+<noscript><p style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;padding:20px;background:#FFFDF4;border-radius:14px;box-shadow:0 10px 30px rgba(146,94,16,.25);z-index:99">Activa JavaScript para abrir tu carta 💛</p></noscript>
+
+<script>
+(function(){
+  'use strict';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var opened = false, done = false;
+
+  var envelope = document.getElementById('envelope');
+  var letter   = document.getElementById('letter');
+  var btn      = document.getElementById('btnRecibido');
+  var bigFlower= document.getElementById('bigFlower');
+  var rain     = document.getElementById('rain');
+  var closing  = document.getElementById('closing');
+
+  /* ---- 小花 SVG（保证是黄色的小黄花） ---- */
+  function flowerSVG(size, petal, center){
+    return '<svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '" aria-hidden="true" focusable="false">'
+      + '<g fill="' + petal + '">'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12"/>'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12" transform="rotate(60 32 32)"/>'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12" transform="rotate(120 32 32)"/>'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12" transform="rotate(180 32 32)"/>'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12" transform="rotate(240 32 32)"/>'
+      + '<ellipse cx="32" cy="16" rx="8" ry="12" transform="rotate(300 32 32)"/>'
+      + '</g>'
+      + '<circle cx="32" cy="32" r="11" fill="' + center + '"/>'
+      + '</svg>';
+  }
+  // 信封封蜡上的小花
+  document.querySelector('.seal').innerHTML = flowerSVG(34, '#F59E0B', '#FFF6DA');
+
+  /* ---- 开信 ---- */
+  function openEnvelope(){
+    if(opened) return;
+    opened = true;
+    envelope.classList.add('open');
+    burstPetal();
+    setTimeout(expandLetter, reduceMotion ? 0 : 620);
+  }
+  function expandLetter(){
+    var r1 = letter.getBoundingClientRect();
+    document.body.appendChild(letter);
+    document.body.classList.add('opened');
+    letter.classList.add('expanded');
+    var r2 = letter.getBoundingClientRect();
+    var dx = r1.left - r2.left;
+    var dy = r1.top - r2.top;
+    var s  = r1.width / r2.width;
+    letter.style.transition = 'none';
+    letter.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px)) scale(' + s + ')';
+    void letter.offsetWidth;
+    letter.style.willChange = 'transform';
+    letter.style.transition = 'transform .7s cubic-bezier(0.22,1,0.36,1)';
+    letter.style.transform = 'translate(-50%,-50%) scale(1)';
+    letter.addEventListener('transitionend', function onEnd(e){
+      if(e.propertyName === 'transform'){
+        letter.style.willChange = '';
+        letter.removeEventListener('transitionend', onEnd);
+      }
+    });
+  }
+  function burstPetal(){
+    if(reduceMotion) return;
+    var r = envelope.getBoundingClientRect();
+    var cx = r.left + r.width/2, cy = r.top + r.height/2;
+    for(var i=0;i<8;i++){
+      var p = document.createElement('span');
+      p.className = 'burst-petal';
+      var size = 8 + Math.random()*8;
+      p.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(cx - size/2)+'px;top:'+(cy - size/2)+'px;background:'+(i%2?'#FFC93C':'#FFE3B3');
+      document.body.appendChild(p);
+      var ang = (Math.PI*2/8)*i + Math.random()*0.5;
+      var dist = 60 + Math.random()*70;
+      requestAnimationFrame(function(){
+        p.style.transform = 'translate('+Math.cos(ang)*dist+'px,'+Math.sin(ang)*dist+'px) scale(.2) rotate('+(Math.random()*200-100)+'deg)';
+        p.style.opacity = '0';
+      });
+      setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); }, 900);
+    }
+  }
+
+  /* ---- 收到：弹出大花 + 满屏黄花雨 ---- */
+  function onRecibido(){
+    if(!opened) openEnvelope();
+    bigFlower.innerHTML = flowerSVG(140, '#FFB703', '#FFF3C4');
+    bigFlower.classList.add('show');
+    if(reduceMotion){
+      staticFlowers();
+      showClosing();
+    } else {
+      setTimeout(startRain, 420);
+      setTimeout(function(){ bigFlower.classList.remove('show'); }, 5200);
+      setTimeout(showClosing, 7600);
+      setTimeout(clearRain, 10800);
+    }
+  }
+  function startRain(){
+    rain.innerHTML = '';
+    var petals = ['#FFC93C','#FFB703','#FFD66B'];
+    for(var i=0;i<90;i++){
+      var size = 16 + Math.random()*24;
+      var span = document.createElement('span');
+      span.style.left = (Math.random()*100) + 'vw';
+      span.style.setProperty('--dur', (3.2 + Math.random()*3.6) + 's');
+      span.style.setProperty('--delay', (Math.random()*3.2) + 's');
+      span.style.setProperty('--sway', (24 + Math.random()*48) + 'px');
+      var inner = document.createElement('i');
+      inner.innerHTML = flowerSVG(size, petals[i%3], '#FFF3C4');
+      span.appendChild(inner);
+      rain.appendChild(span);
+    }
+  }
+  function staticFlowers(){
+    rain.innerHTML = '';
+    for(var i=0;i<7;i++){
+      var size = 30 + Math.random()*40;
+      var span = document.createElement('span');
+      span.style.position = 'absolute';
+      span.style.left = (12 + Math.random()*76) + 'vw';
+      span.style.top  = (30 + Math.random()*40) + 'vh';
+      span.innerHTML = flowerSVG(size, i%2?'#FFB703':'#FFC93C', '#FFF3C4');
+      rain.appendChild(span);
+    }
+  }
+  function clearRain(){ rain.innerHTML = ''; }
+  function showClosing(){ closing.classList.add('show'); }
+
+  /* ---- 事件绑定 ---- */
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
+  });
+  btn.addEventListener('click', onRecibido);
+
+  /* ---- 预览钩子：URL 带 #abierto 自动开信，#flores 自动开花雨 ---- */
+  if(location.hash === '#abierto' || location.hash === '#flores'){
+    setTimeout(function(){
+      openEnvelope();
+      setTimeout(function(){ if(location.hash === '#flores') onRecibido(); }, 1200);
+    }, 300);
+  }
+})();
+</script>
+</body>
+</html>
